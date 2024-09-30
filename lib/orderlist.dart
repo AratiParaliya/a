@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class Ascreen extends StatefulWidget {
-  const Ascreen({super.key});
+
+
+class Orderlist extends StatefulWidget {
+  const Orderlist({super.key});
 
   @override
-  State<Ascreen> createState() => _AscreenState();
+  State<Orderlist> createState() => _OrderlistState();
 }
 
-class _AscreenState extends State<Ascreen> {
+class _OrderlistState extends State<Orderlist> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,6 @@ class _AscreenState extends State<Ascreen> {
               ),
             ),
           ),
-          // Logo and text positioned on top of the container
           Positioned(
             top: 30,
             left: 20,
@@ -56,13 +57,13 @@ class _AscreenState extends State<Ascreen> {
           Column(
             children: [
               const SizedBox(
-                height: 120.0, // This height should be slightly less than the blue container's height
+                height: 100.0, // This height should be slightly less than the blue container's height
               ),
               Expanded(
                 child: Container(
                   width: double.infinity, // Make it full width
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
@@ -78,16 +79,32 @@ class _AscreenState extends State<Ascreen> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ListView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
                       children: [
-                        buildCard(Icons.shopping_cart, 'Orders'),
-                        buildCard(Icons.list, 'Order List'),
-                        buildCard(Icons.approval, 'Order Approval'),
-                        buildCard(Icons.download, 'Download Invoice'),
-                        buildCard(Icons.money, 'Pending Bills'),
-                        buildCard(Icons.book, 'Ledger'),
-                        buildCard(Icons.person, 'My Profile'),
+                        // Title
+                        const Text(
+                          'Order List',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF6F48EB), // Purple color
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // List of Order Items
+                        Expanded(
+                          child: ListView(
+                            children: [
+                              OrderItem(),
+                              OrderItem(),
+                              OrderItem(),
+                              OrderItem(),
+                              OrderItem(),
+                              OrderItem(),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -99,44 +116,39 @@ class _AscreenState extends State<Ascreen> {
       ),
     );
   }
+}
 
-  // A function to build each card with increased size
-  Widget buildCard(IconData icon, String title) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0), // Rounded corners
+class OrderItem extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F4FF), // Light purple color
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300, width: 1),
       ),
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 10.0), // Vertical spacing between cards
-      child: Container(
-        height: 80, // Increase the height of each card
-        padding: const EdgeInsets.symmetric(horizontal: 10.0), // Add padding
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start, // Align the contents to the left
-          crossAxisAlignment: CrossAxisAlignment.center, // Center vertically
-          children: [
-            Icon(
-              icon,
-              color: Color.fromARGB(255, 110, 102, 188),
-              size: 40, // Increase icon size
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            'Medicine Name',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF6F48EB), // Purple color
             ),
-            const SizedBox(width: 15), // Space between icon and text
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 20, // Increase text size
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 110, 102, 188),
-              ),
+          ),
+          SizedBox(height: 8.0),
+          Text(
+            'Medicine Id',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xFF6F48EB),
             ),
-            const Spacer(), // Push the trailing icon to the far right
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Color.fromARGB(255, 110, 102, 188),
-              size: 25, // Increase the trailing icon size
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

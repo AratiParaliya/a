@@ -1,9 +1,48 @@
 import 'dart:ui';
 import 'package:a/forgate_password.dart';
+ // Corrected the typo in import
+import 'package:a/medicin_search.dart';
 import 'package:a/signup.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance; // Firebase Auth instance
+  String errorMessage = ''; // To store error messages
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  // Function to handle login
+  Future<void> _signInWithEmailPassword() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      // Navigate to the next page if successful
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MedicinSearch()),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message!;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,8 +53,8 @@ class LoginPage extends StatelessWidget {
           decoration: const BoxDecoration(
             gradient: RadialGradient(
               colors: [
-                Color.fromARGB(255, 110, 102, 188), // Darker purple
-                Colors.white, // Light center
+                Color.fromARGB(255, 110, 102, 188),
+                Colors.white,
               ],
               radius: 2,
               center: Alignment(2.8, -1.0),
@@ -27,21 +66,20 @@ class LoginPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              // Row for logo and "Sign Up" button
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Image.asset(
-                    'assets/logo.png', // Replace with your logo asset path
-                    width: 50, // Adjust the size as needed
+                    'assets/logo.png',
+                    width: 50,
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to Sign Up page
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SignupPage()), // Navigate to SignUp page
+                          builder: (context) => SignupPage(),
+                        ),
                       );
                     },
                     child: const Text(
@@ -54,27 +92,30 @@ class LoginPage extends StatelessWidget {
                   ),
                 ],
               ),
-              // Add space between logo and text
-              const Center(
-                child: Text(
-                  "Sign in",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                ),
-              ),
-              const Text(
-                "Enter your Details to proceed further",
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+              Center(
+                child: Column(
+                  children: const [
+                    Text(
+                      "Sign in",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
+                    ),
+                    Text(
+                      "Enter your Details to proceed further",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Column(
                 children: <Widget>[
-                  // Username TextField with BoxShadow
+                  // Username TextField
                   Container(
                     decoration: BoxDecoration(
                       boxShadow: [
@@ -82,17 +123,18 @@ class LoginPage extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: const Offset(0, 3),
                         ),
                       ],
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: TextField(
+                      controller: _usernameController, // Updated controller
                       decoration: InputDecoration(
                         hintText: "Username",
                         labelText: 'Username',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(15),
                           borderSide: BorderSide.none,
                         ),
                         fillColor: Colors.white,
@@ -101,7 +143,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Password TextField with BoxShadow
+                  // Password TextField
                   Container(
                     decoration: BoxDecoration(
                       boxShadow: [
@@ -109,17 +151,18 @@ class LoginPage extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: const Offset(0, 3),
                         ),
                       ],
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: TextField(
+                      controller: _passwordController, // Updated controller
                       decoration: InputDecoration(
                         hintText: "Password",
                         labelText: 'Password',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(15),
                           borderSide: BorderSide.none,
                         ),
                         fillColor: Colors.white,
@@ -129,6 +172,13 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
+                  // Error message if login fails
+                  if (errorMessage.isNotEmpty)
+                    Text(
+                      errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
@@ -137,7 +187,7 @@ class LoginPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ForgatePassword()),
+                                builder: (context) => ForgatePassword()), // Corrected ForgotPassword
                           );
                         },
                         child: const Text(
@@ -150,14 +200,13 @@ class LoginPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
                 ],
               ),
-              // Full width "Sign in" button
+              // Sign In Button
               SizedBox(
-                width: double.infinity, // Makes the button full width
+                width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _signInWithEmailPassword, // Call the login function
                   child: const Text(
                     "Sign in",
                     style: TextStyle(
@@ -166,54 +215,8 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Color.fromARGB(255, 110, 102, 188),
-                  ),
-                ),
-              ),
-              const Center(child: Text("Or")),
-              Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 1,
-                      offset: const Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: TextButton(
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 30.0,
-                        width: 30.0,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/google.png'),
-                            fit: BoxFit.cover,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 18),
-                      const Text(
-                        "Sign In with Google",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
+                    shape: const StadiumBorder(), backgroundColor: Color.fromARGB(255, 110, 102, 188),
+                    padding: const EdgeInsets.symmetric(vertical: 16), // Updated color property
                   ),
                 ),
               ),
