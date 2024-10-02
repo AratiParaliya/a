@@ -1,8 +1,80 @@
-import 'package:a/contactdetail_screen.dart';
+import 'package:a/delete_medicine.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class AddToCartScreen extends StatelessWidget {
-  const AddToCartScreen({super.key, required String medicineName, required String genericName, required double price});
+class AddMedicine extends StatefulWidget {
+  const AddMedicine({super.key});
+
+  @override
+  State<AddMedicine> createState() => _AddMedicineState();
+}
+
+class _AddMedicineState extends State<AddMedicine> {
+  // Controllers for TextFields
+  final TextEditingController medicineNameController = TextEditingController();
+  final TextEditingController genericNameController = TextEditingController();
+  final TextEditingController brandController = TextEditingController();
+  final TextEditingController typeController = TextEditingController();
+  final TextEditingController sizeController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+
+  // Firestore reference
+  final CollectionReference medicinesCollection =
+      FirebaseFirestore.instance.collection('product');
+
+  // Function to add medicine to Firestore
+  Future<void> _addMedicine() async {
+    if (medicineNameController.text.isEmpty ||
+        genericNameController.text.isEmpty ||
+        brandController.text.isEmpty ||
+        typeController.text.isEmpty ||
+        sizeController.text.isEmpty ||
+        priceController.text.isEmpty) {
+      // Show error message if any field is empty
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    // Prepare medicine data
+    final medicineData = {
+      'medicineName': medicineNameController.text.trim(),
+      'genericName': genericNameController.text.trim(),
+      'brand': brandController.text.trim(),
+      'type': typeController.text.trim(),
+      'size': sizeController.text.trim(),
+      'price': double.tryParse(priceController.text.trim()) ?? 0.0,
+    };
+
+    try {
+      // Add medicine data to Firestore
+      await medicinesCollection.add(medicineData);
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Medicine added successfully!')),
+      );
+
+      // Optionally, navigate to another page after adding
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => FetchMedicines()),
+      );
+
+      // Clear the text fields
+      medicineNameController.clear();
+      genericNameController.clear();
+      brandController.clear();
+      typeController.clear();
+      sizeController.clear();
+      priceController.clear();
+    } catch (e) {
+      // Handle any errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error adding medicine: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,27 +149,14 @@ class AddToCartScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 20),
-
-                        // Add Medicine Company Name and Medicine Name in the center
-                        const Text(
-                          'Medicine Company Name and Medicine Name',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color:  Color.fromARGB(255, 143, 133, 230), 
-                          ),
-                        ),
-                       
-                        const SizedBox(height: 20),
-
                         _buildSectionTitle('Product Details'),
-                        _buildDetailRow('Medicine Name', 'Paracetamol 500mg'),
-                        _buildDetailRow('Generic Name', 'Paracetamol'),
-                        _buildDetailRow('Brand', 'XYZ Pharmaceuticals'),
-                        _buildDetailRow('Type', 'Tablet'),
-                        _buildDetailRow('Size', '500mg'),
-                        _buildDetailRow('Price', '\$10.00'),
+                        _buildTextField('Medicine Name', medicineNameController, 'Paracetamol 500mg'),
+                        _buildTextField('Generic Name', genericNameController, 'Paracetamol'),
+                        _buildTextField('Brand', brandController, 'XYZ Pharmaceuticals'),
+                        _buildTextField('Type', typeController, 'Tablet'),
+                        _buildTextField('Size', sizeController, 'Enter size'),
+                        _buildTextField('Price', priceController, 'Enter price'),
+
                         const SizedBox(height: 30),
 
                         // Add to Cart button
@@ -105,22 +164,16 @@ class AddToCartScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ContactdetailScreen()),);
-                                  // Handle Add to Cart functionality
-                                },
+                                onPressed: _addMedicine, // Call add medicine function
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(vertical: 16),
-                                  backgroundColor:  Color.fromARGB(255, 143, 133, 230),  // Purple color
+                                  backgroundColor: const Color(0xFF6F48EB), // Purple color
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                 ),
                                 child: const Text(
-                                  'Add to Cart',
+                                  'Add Product',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -133,32 +186,6 @@ class AddToCartScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         // Buy Now button
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // Handle Buy Now functionality
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  backgroundColor:  Color.fromARGB(255, 143, 133, 230),  // Purple color
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Buy Now',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -188,14 +215,14 @@ class AddToCartScreen extends StatelessWidget {
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
-          color: Color.fromARGB(255, 143, 133, 230), 
+          color: Color(0xFF6F48EB),
         ),
       ),
     );
   }
 
-  // Helper method to build each detail row (label and value pair)
-  Widget _buildDetailRow(String label, String value) {
+  // Helper method to build each TextField for user input
+  Widget _buildTextField(String label, TextEditingController controller, String hintText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -215,27 +242,31 @@ class AddToCartScreen extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 143, 133, 230), 
+                  color: Color(0xFF6F48EB),
                 ),
               ),
             ),
           ),
           const SizedBox(width: 10),
-          // Value (right side)
+          // TextField (right side)
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(1),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.shade300),
               ),
-              child: Text(
-                value,
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: hintText,
+                ),
                 style: const TextStyle(
                   fontSize: 16,
-                  color:  Color.fromARGB(255, 143, 133, 230), 
+                  color: Color(0xFF6F48EB),
                 ),
               ),
             ),

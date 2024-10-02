@@ -1,3 +1,4 @@
+import 'package:a/delete_medicine.dart';
 import 'package:a/invoice_download.dart';
 import 'package:a/order_approvel.dart';
 import 'package:a/orderlist.dart';
@@ -152,9 +153,9 @@ class _DashboardState extends State<Dashboard> {
 
     // Define the navigation based on the card title
     switch (title) {
-      // case 'Orders':
-      //   destinationScreen = ;
-        // break;
+      case 'Orders':
+        destinationScreen = FetchMedicines() ;
+        break;
       case 'Order List':
         destinationScreen = Orderlist();
         break;

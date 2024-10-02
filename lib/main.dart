@@ -1,11 +1,15 @@
 import 'dart:ui';
 
 
-import 'package:a/Bill_number.dart';
+
+
+import 'package:a/add_medicine.dart';
 import 'package:a/dashboard.dart';
+import 'package:a/delete_medicine.dart';
 import 'package:a/login.dart';
+import 'package:a/medicin_search.dart';
 
-
+import 'package:a/rough.dart';
 import 'package:a/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -36,7 +40,7 @@ WidgetsFlutterBinding.ensureInitialized();
   
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home:Dashboard(),
+    home:MedicinSearch(),
   ));
 }
 

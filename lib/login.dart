@@ -1,6 +1,7 @@
 import 'dart:ui';
-import 'package:a/forgate_password.dart';
+
  // Corrected the typo in import
+import 'package:a/forgate_password.dart';
 import 'package:a/medicin_search.dart';
 import 'package:a/signup.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           width: double.infinity,

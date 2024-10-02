@@ -1,8 +1,22 @@
-import 'package:a/contactdetail_screen.dart';
+import 'package:a/totalpage_confirm.dart';
 import 'package:flutter/material.dart';
 
-class AddToCartScreen extends StatelessWidget {
-  const AddToCartScreen({super.key, required String medicineName, required String genericName, required double price});
+class EditMedicineDetails extends StatefulWidget {
+  const EditMedicineDetails({super.key});
+
+  @override
+  State<EditMedicineDetails> createState() => _EditMedicineDetailsState();
+}
+
+class _EditMedicineDetailsState extends State<EditMedicineDetails> {
+  // Controllers for TextFields
+  final TextEditingController MedicineNameController = TextEditingController();
+  final TextEditingController GenericNameController = TextEditingController();
+  final TextEditingController brandController = TextEditingController();
+  final TextEditingController typeController = TextEditingController();
+  final TextEditingController sizeController = TextEditingController();
+  final TextEditingController  priceController = TextEditingController();
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -77,27 +91,14 @@ class AddToCartScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 20),
-
-                        // Add Medicine Company Name and Medicine Name in the center
-                        const Text(
-                          'Medicine Company Name and Medicine Name',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color:  Color.fromARGB(255, 143, 133, 230), 
-                          ),
-                        ),
-                       
-                        const SizedBox(height: 20),
-
                         _buildSectionTitle('Product Details'),
-                        _buildDetailRow('Medicine Name', 'Paracetamol 500mg'),
-                        _buildDetailRow('Generic Name', 'Paracetamol'),
-                        _buildDetailRow('Brand', 'XYZ Pharmaceuticals'),
-                        _buildDetailRow('Type', 'Tablet'),
-                        _buildDetailRow('Size', '500mg'),
-                        _buildDetailRow('Price', '\$10.00'),
+                        _buildTextField('Medicine Name', MedicineNameController, 'Paracetamol 500mg'),
+                        _buildTextField('Generic Name', GenericNameController, 'Paracetamol'),
+                        _buildTextField('Brand', brandController, 'XYZ Pharmaceuticals'),
+                        _buildTextField('Type',typeController, 'Tablet'),
+                        _buildTextField('Size', sizeController, 'Enter size'),
+                        _buildTextField('Price', priceController, 'enter price'),
+
                         const SizedBox(height: 30),
 
                         // Add to Cart button
@@ -106,21 +107,22 @@ class AddToCartScreen extends StatelessWidget {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
+
                                   Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ContactdetailScreen()),);
+                                builder: (context) => ConfirmOrderPage()),);
                                   // Handle Add to Cart functionality
                                 },
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(vertical: 16),
-                                  backgroundColor:  Color.fromARGB(255, 143, 133, 230),  // Purple color
+                                  backgroundColor: const Color(0xFF6F48EB), // Purple color
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                 ),
                                 child: const Text(
-                                  'Add to Cart',
+                                  'Add Product',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -133,32 +135,7 @@ class AddToCartScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         // Buy Now button
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // Handle Buy Now functionality
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  backgroundColor:  Color.fromARGB(255, 143, 133, 230),  // Purple color
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Buy Now',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                       
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -188,14 +165,14 @@ class AddToCartScreen extends StatelessWidget {
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
-          color: Color.fromARGB(255, 143, 133, 230), 
+          color: Color(0xFF6F48EB),
         ),
       ),
     );
   }
 
-  // Helper method to build each detail row (label and value pair)
-  Widget _buildDetailRow(String label, String value) {
+  // Helper method to build each TextField for user input
+  Widget _buildTextField(String label, TextEditingController controller, String hintText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -215,27 +192,33 @@ class AddToCartScreen extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 143, 133, 230), 
+                  color: Color(0xFF6F48EB),
                 ),
               ),
             ),
           ),
           const SizedBox(width: 10),
-          // Value (right side)
+          // TextField (right side)
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(1),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.shade300),
               ),
-              child: Text(
-                value,
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                
+                  border: InputBorder.none,
+                  hintText: hintText,
+                ),
                 style: const TextStyle(
+                  
                   fontSize: 16,
-                  color:  Color.fromARGB(255, 143, 133, 230), 
+                  color: Color(0xFF6F48EB),
                 ),
               ),
             ),

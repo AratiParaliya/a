@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class OrderApprovel extends StatelessWidget {
-  const OrderApprovel({super.key});
+class OrderlistNextpage extends StatelessWidget {
+  const OrderlistNextpage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -107,62 +107,7 @@ class OrderApprovel extends StatelessWidget {
                           _buildDetailRow('Pincode', '360360'),
                           _buildDetailRow('City', 'Rjk'),
 
-                          const SizedBox(height: 30),
-
-                          // Save & Continue button
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Handle Save & Continue functionality
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 20),
-                                    backgroundColor: const Color(0xFF6F48EB), // Purple color
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'Confirm Order',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                         const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Handle Save & Continue functionality
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 20),
-                                    backgroundColor: const Color(0xFF6F48EB), // Purple color
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'Decline order',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          
                         ],
                       ),
                     ),

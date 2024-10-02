@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore for storing the username
-import 'package:a/auth_service.dart'; // Assuming AuthService is in services/auth_service.dart
-import 'package:a/login.dart'; // Assuming LoginPage is in login.dart
+import 'package:a/auth_service.dart'; // Adjust this import based on your project structure
+import 'package:a/login.dart'; // Adjust this import based on your project structure
 
 class SignupPage extends StatefulWidget {
   @override
@@ -11,6 +11,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  
   final _authService = AuthService(); // Create an instance of AuthService
   final _formKey = GlobalKey<FormState>(); // Form key for validation
 
@@ -36,11 +37,23 @@ class _SignupPageState extends State<SignupPage> {
         );
 
         if (user != null) {
-          // Navigate to a success page or the home screen upon successful registration
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+          // Show a success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Sign-up successful!'),
+              backgroundColor: Colors.green, // Optional: green for success
+              duration: Duration(seconds: 2), // Optional: duration for how long to show the message
+            ),
           );
+
+          // Delay the navigation to show the success message
+          Future.delayed(Duration(seconds: 2), () {
+            // Navigate to LoginPage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          });
         }
       } on FirebaseAuthException catch (e) {
         // Handle specific sign-up failure error from Firebase Auth
@@ -60,12 +73,18 @@ class _SignupPageState extends State<SignupPage> {
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red, // Optional: red for errors
+          ),
         );
       } catch (e) {
         // Handle any other errors
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("An error occurred. Please try again.")),
+          SnackBar(
+            content: Text("An error occurred. Please try again."),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -74,6 +93,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           width: double.infinity,
